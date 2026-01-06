@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Device Reset Checklist</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --success: #22c55e;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-container {
+            position: sticky;
+            top: 20px;
+            background: var(--card);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #334155;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.4s ease;
+        }
+
+        .section {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.2s;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+        }
+
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            cursor: pointer;
+            border-bottom: 1px solid #334155;
+        }
+
+        .task:last-child { border: none; }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: var(--success);
+        }
+
+        .task-text {
+            flex-grow: 1;
+        }
+
+        .completed-text {
+            text-decoration: line-through;
+            color: #64748b;
+        }
+
+        /* SVG Animation */
+        .icon-svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .animate-check {
+            stroke-dasharray: 20;
+            stroke-dashoffset: 20;
+            transition: stroke-dashoffset 0.3s ease;
+        }
+
+        input:checked + .task-text .animate-check {
+            stroke-dashoffset: 0;
+        }
+
+        .warning-box {
+            background: #450a0a;
+            border: 1px solid #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>📱 Reset Ready?</h1>
+            <p>Ensure your data is safe before the wipe.</p>
+        </header>
+
+        <div class="progress-container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span>Backup Progress</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Invisible Essentials
+            </h2>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">Export 2FA codes (Google Authenticator)</span>
+            </label>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">De-register Banking Apps</span>
+            </label>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">Verify Password Manager Master Key</span>
+            </label>
+        </div>
+
+        <div class="section" style="border-left-color: #eab308;">
+            <h2>
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Cloud & Media
+            </h2>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">Force Sync Google/iCloud Accounts</span>
+            </label>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">WhatsApp/Signal Chat Backup</span>
+            </label>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">Check 'Downloads' folder for PDFs</span>
+            </label>
+        </div>
+
+        <div class="section" style="border-left-color: #ef4444;">
+            <h2>
+                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+                Final Steps
+            </h2>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">Remove Google/iCloud account from device</span>
+            </label>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">Screenshot App Home Screens</span>
+            </label>
+            <label class="task">
+                <input type="checkbox" class="task-check">
+                <span class="task-text">Battery > 50% & Plugged In</span>
+            </label>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Warning:</strong> Factory reset will permanently delete all data not synced or backed up. This action is irreversible.
+        </div>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.task-check');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+
+        function updateProgress() {
+            const total = checkboxes.length;
+            const checked = document.querySelectorAll('.task-check:checked').length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            progressFill.style.width = percentage + '%';
+            progressText.innerText = percentage + '%';
+
+            // Visual feedback on the text
+            checkboxes.forEach(cb => {
+                const text = cb.nextElementSibling;
+                if (cb.checked) {
+                    text.classList.add('completed-text');
+                } else {
+                    text.classList.remove('completed-text');
+                }
+            });
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateProgress);
+        });
+    </script>
+</body>
+</html>
