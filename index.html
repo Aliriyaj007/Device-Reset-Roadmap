@@ -2,250 +2,597 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Device Reset Checklist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Master Device Reset Checklist</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --success: #22c55e;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
         }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             margin: 0;
+            padding-bottom: 80px; /* Space for footer */
+            overflow-x: hidden;
+        }
+
+        /* --- Header & Progress --- */
+        header {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
             padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .container {
-            max-width: 600px;
-            width: 100%;
+        h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        
+        .progress-wrapper {
+            margin-top: 15px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
         }
 
-        .progress-container {
-            position: sticky;
-            top: 20px;
-            background: var(--card);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-            z-index: 100;
-        }
-
-        .progress-bar {
-            height: 10px;
-            background: #334155;
-            border-radius: 5px;
+        .progress-track {
+            height: 8px;
+            background: var(--bg-card);
+            border-radius: 10px;
             overflow: hidden;
+            border: 1px solid var(--border);
         }
 
-        #progress-fill {
+        .progress-fill {
             height: 100%;
             width: 0%;
             background: linear-gradient(90deg, var(--primary), var(--success));
-            transition: width 0.4s ease;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 10px var(--primary-glow);
         }
 
-        .section {
-            background: var(--card);
+        /* --- Main Content --- */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .accordion-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .accordion-header {
             padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary);
-            transition: transform 0.2s;
-        }
-
-        .section:hover {
-            transform: translateY(-2px);
-        }
-
-        h2 {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 0;
-            font-size: 1.2rem;
-            color: var(--primary);
-        }
-
-        .task {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
             cursor: pointer;
-            border-bottom: 1px solid #334155;
+            user-select: none;
+            background: linear-gradient(to right, var(--bg-card), rgba(255,255,255,0.02));
         }
 
-        .task:last-child { border: none; }
+        .accordion-header:hover { background: rgba(255,255,255,0.03); }
 
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+        .cat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-right: 15px;
-            cursor: pointer;
-            accent-color: var(--success);
+            font-size: 1.2rem;
         }
 
-        .task-text {
-            flex-grow: 1;
+        .cat-title { flex: 1; font-weight: 600; font-size: 1.1rem; }
+        
+        .cat-arrow {
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
         }
 
-        .completed-text {
-            text-decoration: line-through;
-            color: #64748b;
+        .accordion-item.active .cat-arrow { transform: rotate(180deg); }
+        .accordion-item.active { box-shadow: 0 0 0 2px var(--primary); transform: translateY(-2px); }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: rgba(0,0,0,0.2);
         }
 
-        /* SVG Animation */
-        .icon-svg {
+        .accordion-item.active .accordion-content { max-height: 2000px; }
+
+        /* --- Checklist Items --- */
+        .task-group { padding: 10px 20px 20px; }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            animation: fadeIn 0.5s;
+        }
+
+        .checklist-item:last-child { border-bottom: none; }
+
+        /* Custom Checkbox */
+        .cb-wrapper {
+            position: relative;
             width: 24px;
             height: 24px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            margin-right: 15px;
+            margin-top: 2px;
+            flex-shrink: 0;
         }
 
-        .animate-check {
-            stroke-dasharray: 20;
-            stroke-dashoffset: 20;
-            transition: stroke-dashoffset 0.3s ease;
+        input[type="checkbox"] {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+            position: absolute;
         }
 
-        input:checked + .task-text .animate-check {
-            stroke-dashoffset: 0;
+        .cb-custom {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            transition: all 0.2s;
         }
 
-        .warning-box {
-            background: #450a0a;
-            border: 1px solid #991b1b;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-size: 0.9rem;
+        input:checked + .cb-custom {
+            background: var(--success);
+            border-color: var(--success);
+            transform: scale(1.1);
+        }
+
+        input:checked + .cb-custom::after {
+            content: '';
+            position: absolute;
+            left: 7px; top: 3px;
+            width: 6px; height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .task-details { flex: 1; }
+        .task-name { display: block; font-size: 1rem; margin-bottom: 4px; transition: color 0.2s; }
+        .task-desc { display: block; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+
+        input:checked ~ .task-details .task-name {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        /* --- Tags & badges --- */
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-critical { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.4); }
+        .tag-rec { background: rgba(59, 130, 246, 0.2); color: var(--primary); }
+
+        /* --- Footer --- */
+        .footer-actions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active { transform: scale(0.95); }
+        .btn-reset { color: var(--danger); border-color: var(--danger); }
+
+        /* --- Confetti --- */
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 1rem; }
+            .accordion-header { padding: 15px; }
+            .cat-icon { width: 32px; height: 32px; font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>📱 Reset Ready?</h1>
-            <p>Ensure your data is safe before the wipe.</p>
-        </header>
+    <canvas id="confetti-canvas"></canvas>
 
-        <div class="progress-container">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <span>Backup Progress</span>
+    <header>
+        <div class="header-content">
+            <h1>📱 Device Reset Pro</h1>
+            <div style="font-size: 0.8rem; opacity: 0.7;">v2.0</div>
+        </div>
+        <div class="progress-wrapper">
+            <div class="progress-stats">
+                <span>Backup Completion</span>
                 <span id="progress-text">0%</span>
             </div>
-            <div class="progress-bar">
-                <div id="progress-fill"></div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="accordion-item active">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="cat-icon" style="color: var(--danger); border: 1px solid var(--danger);">🔒</div>
+                <div class="cat-title">Step 1: The "Do Not Lose" List</div>
+                <div class="cat-arrow">▼</div>
+            </div>
+            <div class="accordion-content">
+                <div class="task-group">
+                    <div style="background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; border-left: 3px solid var(--danger);">
+                        ⚠️ If you lose these, you may be locked out of your digital life forever.
+                    </div>
+
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="2fa"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="tag tag-critical">Top Priority</span>
+                            <span class="task-name">Export Google Authenticator / 2FA</span>
+                            <span class="task-desc">Authenticator apps DO NOT sync automatically. Export to a QR code and scan with another phone.</span>
+                        </div>
+                    </label>
+
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="banking"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">De-register Banking Apps</span>
+                            <span class="task-desc">Some banks block login on a "new" device unless you logout from the old one first.</span>
+                        </div>
+                    </label>
+
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="crypto"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Crypto Wallets & Vaults</span>
+                            <span class="task-desc">Backup recovery phrases for MetaMask, TrustWallet, or locked gallery folders (Secret Folder).</span>
+                        </div>
+                    </label>
+                </div>
             </div>
         </div>
 
-        <div class="section">
-            <h2>
-                <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                Invisible Essentials
-            </h2>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">Export 2FA codes (Google Authenticator)</span>
-            </label>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">De-register Banking Apps</span>
-            </label>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">Verify Password Manager Master Key</span>
-            </label>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="cat-icon" style="color: var(--primary);">💬</div>
+                <div class="cat-title">Step 2: Communication & Social</div>
+                <div class="cat-arrow">▼</div>
+            </div>
+            <div class="accordion-content">
+                <div class="task-group">
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="whatsapp"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">WhatsApp Chat Backup</span>
+                            <span class="task-desc">Settings → Chats → Chat Backup. Click "Back Up Now" and wait for upload to finish.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="sms"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">SMS & Call Logs</span>
+                            <span class="task-desc">Install 'SMS Organizer' or 'Google Messages' and ensure sync is active.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="contacts"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Google Contacts Sync</span>
+                            <span class="task-desc">Go to Settings → Accounts → Google → Account Sync. Verify 'Contacts' synced today.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
         </div>
 
-        <div class="section" style="border-left-color: #eab308;">
-            <h2>
-                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                Cloud & Media
-            </h2>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">Force Sync Google/iCloud Accounts</span>
-            </label>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">WhatsApp/Signal Chat Backup</span>
-            </label>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">Check 'Downloads' folder for PDFs</span>
-            </label>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="cat-icon" style="color: #a855f7;">📸</div>
+                <div class="cat-title">Step 3: Photos & Files</div>
+                <div class="cat-arrow">▼</div>
+            </div>
+            <div class="accordion-content">
+                <div class="task-group">
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="dcim"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">DCIM (Camera) Folder</span>
+                            <span class="task-desc">Verify Google Photos backup says "Backup Complete".</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="folders"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="tag tag-rec">Easy to Miss</span>
+                            <span class="task-name">Specific Image Folders</span>
+                            <span class="task-desc">Manually backup: WhatsApp Images, Screenshots, Instagram, Download folder.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="recorder"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Voice Recordings</span>
+                            <span class="task-desc">Check your Voice Recorder app. These are rarely cloud synced automatically.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
         </div>
 
-        <div class="section" style="border-left-color: #ef4444;">
-            <h2>
-                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
-                Final Steps
-            </h2>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">Remove Google/iCloud account from device</span>
-            </label>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">Screenshot App Home Screens</span>
-            </label>
-            <label class="task">
-                <input type="checkbox" class="task-check">
-                <span class="task-text">Battery > 50% & Plugged In</span>
-            </label>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="cat-icon" style="color: #f59e0b;">🖼️</div>
+                <div class="cat-title">Step 4: Screenshots & Settings</div>
+                <div class="cat-arrow">▼</div>
+            </div>
+            <div class="accordion-content">
+                <div class="task-group">
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="ss_apps"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Screenshot App List</span>
+                            <span class="task-desc">Scroll through your app drawer and take screenshots so you know what to reinstall.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="ss_home"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Home Screen Layout</span>
+                            <span class="task-desc">Screenshot your widget and icon layout.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="alarm"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Alarms & Clock</span>
+                            <span class="task-desc">Screenshot your alarm times.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
         </div>
 
-        <div class="warning-box">
-            <strong>⚠️ Warning:</strong> Factory reset will permanently delete all data not synced or backed up. This action is irreversible.
+        <div class="accordion-item" style="border-color: var(--danger);">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <div class="cat-icon" style="color: var(--danger);">💣</div>
+                <div class="cat-title" style="color: var(--danger);">Step 5: The Final Wipe</div>
+                <div class="cat-arrow">▼</div>
+            </div>
+            <div class="accordion-content">
+                <div class="task-group">
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="frp"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="tag tag-critical">Crucial</span>
+                            <span class="task-name">Remove Google Account</span>
+                            <span class="task-desc">Go to Settings → Accounts → Remove Account. This prevents "FRP Lock" (being asked for old password after reset).</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="battery"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Check Battery</span>
+                            <span class="task-desc">Ensure phone is > 50% charged or plugged in.</span>
+                        </div>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="cb-wrapper"><input type="checkbox" class="task-check" data-id="reset_btn"><div class="cb-custom"></div></div>
+                        <div class="task-details">
+                            <span class="task-name">Execute Factory Reset</span>
+                            <span class="task-desc">Settings → System → Reset Options → Erase All Data.</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
         </div>
+
+    </div>
+
+    <div class="footer-actions">
+        <button class="btn btn-reset" onclick="clearProgress()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
+            Clear Progress
+        </button>
     </div>
 
     <script>
+        // --- Confetti Logic ---
+        const canvas = document.getElementById("confetti-canvas");
+        const ctx = canvas.getContext("2d");
+        let confetti = [];
+        
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function startConfetti() {
+            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#a855f7'];
+            for(let i=0; i<150; i++) {
+                confetti.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 8 + 2,
+                    speed: Math.random() * 5 + 2,
+                    angle: Math.random() * 2 * Math.PI,
+                    spin: Math.random() * 0.2 - 0.1
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            if(confetti.length === 0) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            confetti.forEach((p, index) => {
+                p.y += p.speed;
+                p.angle += p.spin;
+                p.x += Math.sin(p.angle) * 2;
+                
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.rect(p.x, p.y, p.size, p.size);
+                ctx.fill();
+
+                if(p.y > canvas.height) confetti.splice(index, 1);
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+
+        // --- Core Logic ---
         const checkboxes = document.querySelectorAll('.task-check');
         const progressFill = document.getElementById('progress-fill');
         const progressText = document.getElementById('progress-text');
 
-        function updateProgress() {
-            const total = checkboxes.length;
-            const checked = document.querySelectorAll('.task-check:checked').length;
-            const percentage = Math.round((checked / total) * 100);
-            
-            progressFill.style.width = percentage + '%';
-            progressText.innerText = percentage + '%';
-
-            // Visual feedback on the text
+        // Load saved state
+        function loadState() {
+            const saved = JSON.parse(localStorage.getItem('resetChecklist_v2') || '{}');
             checkboxes.forEach(cb => {
-                const text = cb.nextElementSibling;
-                if (cb.checked) {
-                    text.classList.add('completed-text');
-                } else {
-                    text.classList.remove('completed-text');
-                }
+                const id = cb.getAttribute('data-id');
+                if(saved[id]) cb.checked = true;
             });
+            updateProgress(false);
         }
 
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateProgress);
+        // Save state
+        function saveState() {
+            const state = {};
+            checkboxes.forEach(cb => {
+                state[cb.getAttribute('data-id')] = cb.checked;
+            });
+            localStorage.setItem('resetChecklist_v2', JSON.stringify(state));
+        }
+
+        function updateProgress(triggerConfetti = true) {
+            const total = checkboxes.length;
+            const checked = document.querySelectorAll('.task-check:checked').length;
+            const percent = Math.round((checked / total) * 100);
+
+            progressFill.style.width = percent + '%';
+            progressText.innerText = percent + '%';
+
+            if(percent === 100 && triggerConfetti) {
+                startConfetti();
+                // Add success glow to body
+                document.body.style.transition = "box-shadow 1s";
+                document.body.style.boxShadow = "inset 0 0 50px rgba(16, 185, 129, 0.2)";
+            } else {
+                document.body.style.boxShadow = "none";
+            }
+            
+            saveState();
+        }
+
+        function clearProgress() {
+            if(confirm('Start over? This will uncheck all boxes.')) {
+                checkboxes.forEach(cb => cb.checked = false);
+                updateProgress(false);
+                localStorage.removeItem('resetChecklist_v2');
+                location.reload();
+            }
+        }
+
+        // Accordion Logic
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Optional: Close others
+            // document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+
+            if(!isActive) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        }
+
+        // Event Listeners
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => updateProgress(true));
         });
+
+        // Initialize
+        loadState();
+
     </script>
 </body>
 </html>
